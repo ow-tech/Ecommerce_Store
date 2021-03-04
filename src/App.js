@@ -1,6 +1,7 @@
 import './';
-
-import Products from './Products'
+import React, {useState, useEffect} from 'react';
+import {commerce}from './lib/commerce';
+import Products from './component/Products'
 import { Layout, Menu, Breadcrumb, Badge, Spin } from 'antd';
 import {ShoppingCartOutlined } from '@ant-design/icons';
 
@@ -12,6 +13,16 @@ const { Header, Content, Footer } = Layout;
 const shoppingCart = <ShoppingCartOutlined style={{ fontSize: '35px', color: '#08c', }}/>
 
 function App() {
+
+    const [products, setProducts ] = useState([])
+    const fetchProducts = async ()=> {
+        const {data}= await commerce.products.list();
+        setProducts(data)
+    }
+
+    useEffect(()=>{
+        fetchProducts()
+    }, []);
     return (
          <Layout>
             <Header style={{ position: 'fixed', zIndex: 1, width: '100%' }}>
@@ -37,7 +48,7 @@ function App() {
                 <Breadcrumb.Item>App</Breadcrumb.Item>
             </Breadcrumb>
             <div className="site-layout-background" style={{ padding: 24, minHeight: 380 }}>
-            <Products/>
+            <Products products={products}/>
             </div>
             </Content>
             <Footer style={{ textAlign: 'center' }}>Ecom ©2021 Created by Ow_tech</Footer>

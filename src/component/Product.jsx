@@ -6,10 +6,11 @@ import { SettingOutlined, EllipsisOutlined, ShoppingCartOutlined} from '@ant-des
 
 
 const Product = ({product}) => {
-    console.log(product.name)
+    console.log(product)
     const { Meta } = Card;
+   
     return (
-        <>
+        <div>
         
 
         
@@ -20,7 +21,7 @@ const Product = ({product}) => {
                 cover={
                 <img
                     alt="example"
-                    src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
+                    src={product.media.source}
                 />
                 }
                 actions={[
@@ -33,11 +34,11 @@ const Product = ({product}) => {
                 description={product.description}
                 />
                 <Typography variant ="h5">
-                    {product.price}
+                    {product.price.formatted_with_symbol}
                 </Typography>
             </Card>
                         
-                    </>
+                    </div>
         )
 }
 
