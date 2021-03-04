@@ -1,9 +1,10 @@
 import React from 'react';
-import 'antd/dist/antd.css';
+import './App.less';
+
 import { Row, Col, Divider } from 'antd';
 import Product from './Product';
 
-const style = { background: '#0092ff', padding: '8px 0' };
+// const style = { background: '#0092ff', padding: '8px 0' };
 
 
 
@@ -26,7 +27,7 @@ const Products = ()=>{
         <Divider orientation="left">Products</Divider>
         <Row justify="space-around" align="middle">
         {fetchedProducts.map((product)=>(
-            <Col  style={{marginBlock:"20px",display:"flex",justifyContent:"center"}} xs={16}sm= {16} md={24} lg={32} xl={8} span={8} key={product.id}>
+            <Col  style={{position:"relative", marginBlock:"10px",display:"flex",justifyContent:"center"}} xs={16}sm= {16} md={24} lg={32} xl={8} span={8} key={product.id}>
                 < Product product={product}/>
             </Col>
             
