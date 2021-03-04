@@ -8,7 +8,7 @@ import Product from './Product';
 
 
 
-const Products = ({products})=>{
+const Products = ({ products, onAddToCart })=>{
 
     return(
         <>
@@ -17,7 +17,7 @@ const Products = ({products})=>{
         <Row justify="space-around" align="middle">
         {products.map((product)=>(
             <Col  style={{position:"relative", marginBlock:"10px",display:"flex",justifyContent:"center"}} xs={16}sm= {16} md={24} lg={32} xl={8} span={8} key={product.id}>
-                < Product product={product}/>
+                < Product product={product} onAddToCart={onAddToCart}/>
             </Col>
             
             ))}

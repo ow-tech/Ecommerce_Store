@@ -5,8 +5,8 @@ import { SettingOutlined, EllipsisOutlined, ShoppingCartOutlined} from '@ant-des
 
 
 
-const Product = ({product}) => {
-    console.log(product)
+const Product = ({product, onAddToCart}) => {
+    // console.log(product)
     const { Meta } = Card;
    
     return (
@@ -25,7 +25,7 @@ const Product = ({product}) => {
                 />
                 }
                 actions={[
-                <ShoppingCartOutlined key="" aria-label="Add to Cart"/>
+                <ShoppingCartOutlined key="" aria-label="Add to Cart" onClick={()=>onAddToCart(product.id, 1)}/>
                 ]}
             >
                 <Meta

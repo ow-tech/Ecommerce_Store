@@ -15,14 +15,26 @@ const shoppingCart = <ShoppingCartOutlined style={{ fontSize: '35px', color: '#0
 function App() {
 
     const [products, setProducts ] = useState([])
+    const [cart, setCart] = useState({});
     const fetchProducts = async ()=> {
         const {data}= await commerce.products.list();
         setProducts(data)
     }
 
+    const fetchCart = async () =>{
+        setCart(await commerce.cart.retrieve())
+    }
+
+    const handleAddToCart = async(productId, quantity)=>{
+        const item = await commerce.cart.add(productId, quantity);
+        setCart(item.cart);
+    }
+
     useEffect(()=>{
-        fetchProducts()
+        fetchProducts();
+        fetchCart();
     }, []);
+    console.log(cart);
     return (
          <Layout>
             <Header style={{ position: 'fixed', zIndex: 1, width: '100%' }}>
@@ -33,7 +45,7 @@ function App() {
                 <Menu.Item key="3">nav 3</Menu.Item>
                 <Menu.Item alignSelf="flex-end">
                 <div>
-                    <Badge count="5" spin="true">
+                    <Badge count={cart.total_items} spin="true">
                     <Spin indicator={shoppingCart}/>
                     </Badge>
                 </div>
@@ -48,7 +60,7 @@ function App() {
                 <Breadcrumb.Item>App</Breadcrumb.Item>
             </Breadcrumb>
             <div className="site-layout-background" style={{ padding: 24, minHeight: 380 }}>
-            <Products products={products}/>
+            <Products products={products} onAddToCart={handleAddToCart}/>
             </div>
             </Content>
             <Footer style={{ textAlign: 'center' }}>Ecom ©2021 Created by Ow_tech</Footer>
