@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 
-
+import {Link} from 'react-router-dom';
 import {Typography, Divider, Row,Col, Skeleton, Button, Empty, Space} from 'antd';
 import CartItem from './CartItem';
 
@@ -11,6 +11,7 @@ const Cart = ({cart}) => {
     
     const EmptyCart =  ()=>(<>
         <Typography variant="subtitle">You have no items in your cart. Start adding now</Typography>
+        <Link>Go Back and ADD Items</Link>
         <Empty/>
         </>
     );
@@ -20,7 +21,7 @@ const Cart = ({cart}) => {
             <>
 
                 {cart.line_items.map((item) => (
-                  <Col style={{position:"relative", marginBlock:"10px",display:"flex",justifyContent:"center"}}  xs={24}sm= {16} md={12} lg={8} xl={4} span={8} className="gutter-row" span={8} key={item.id}>
+                  <Col style={{position:"relative", marginBlock:"10px",display:"flex",justifyContent:"center"}}  xs={24}sm= {16} md={12} lg={8} xl={8} span={8} className="gutter-row" span={8} key={item.id}>
                        <CartItem item={item}/>
                     </Col>
                    

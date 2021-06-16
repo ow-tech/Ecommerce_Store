@@ -1,6 +1,6 @@
 import './';
 import React, {useState, useEffect} from 'react';
-import ReactDOM from 'react-dom';
+import{BrowserRouter as Router,Switch, Route, Link, useLocation}from 'react-router-dom';
 import {commerce}from './lib/commerce';
 import Products from './component/Products';
 import Cart from './component/Cart'
@@ -16,6 +16,9 @@ const { Header, Content, Footer } = Layout;
 const shoppingCart = <ShoppingCartOutlined style={{ fontSize: '35px', color: '#08c', }}/>
 
 function App() {
+    
+
+  
     const [loading, setLoading] = useState(true)
 
     const [products, setProducts ] = useState([])
@@ -48,20 +51,29 @@ function App() {
     }, []);
     console.log(cart);
     return (
+        <Router>
          <Layout>
             <Header style={{ position: 'fixed', zIndex: 1, width: '100%' }}>
             <div className="logo" />
             <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']}>
-                <Menu.Item key="1">nav 1</Menu.Item>
+               
+                    <Menu.Item key="1">
+                    <Link to="/">
+                        Home</Link>
+                    </Menu.Item>
+                
+                
                 <Menu.Item key="2">nav 2</Menu.Item>
                 <Menu.Item key="3">nav 3</Menu.Item>
                 <Menu.Item alignSelf="flex-end">
                 <div>
-                    <Badge count={cart.total_items} spin="true">
+                    <Link to="/cart">
+                    <Badge  count={cart.total_items} spin="true">
                     <Spin indicator={shoppingCart}/>
-                    </Badge>
+                    </Badge></Link>
                 </div>
                 </Menu.Item>
+                
                
             </Menu>
             </Header>
@@ -72,11 +84,23 @@ function App() {
                 <Breadcrumb.Item>App</Breadcrumb.Item>
             </Breadcrumb>
             <div className="site-layout-background" style={{ padding: 24, minHeight: 380 }}>
-                {/* {loading? <Skeleton active></Skeleton>:
-                (<><Products products={products} onAddToCart={handleAddToCart}/>   
+                {loading? <Skeleton active></Skeleton>:
+                (
+                    <Switch>
+                        <Route exact path='/'>
+                            < Products products={products} onAddToCart={handleAddToCart}/>  
+
+                        </Route >
+                        <Route eaxact path='/cart'>
+                        <Cart cart={cart}/> 
+
+                        </Route>
+                       
+                  
+                    </Switch>
                 
-                </>)} */}
-                <Cart cart={cart}/>
+                )}
+              
                 
             
             </div>
@@ -84,6 +108,7 @@ function App() {
             </Content>
             <Footer style={{ textAlign: 'center' }}>Ecom ©2021 Created by Ow_tech</Footer>
         </Layout>
+    </Router>
 
            
             
