@@ -1,7 +1,7 @@
 import React from 'react'
 import 'antd/dist/antd.css';
 import { Card, Avatar, Typography } from 'antd';
-import { SettingOutlined, EllipsisOutlined, ShoppingCartOutlined} from '@ant-design/icons';
+import {  ShoppingCartOutlined} from '@ant-design/icons';
 
 
 
