@@ -1,9 +1,12 @@
 import './';
 import React, {useState, useEffect} from 'react';
+import ReactDOM from 'react-dom';
 import {commerce}from './lib/commerce';
-import Products from './component/Products'
-import { Layout, Menu, Breadcrumb, Badge, Spin } from 'antd';
+import Products from './component/Products';
+import Cart from './component/Cart'
+import { Layout, Menu, Breadcrumb, Badge, Spin, Skeleton } from 'antd';
 import {ShoppingCartOutlined } from '@ant-design/icons';
+
 
 
 
@@ -13,17 +16,24 @@ const { Header, Content, Footer } = Layout;
 const shoppingCart = <ShoppingCartOutlined style={{ fontSize: '35px', color: '#08c', }}/>
 
 function App() {
+    const [loading, setLoading] = useState(true)
 
     const [products, setProducts ] = useState([])
     const [cart, setCart] = useState({});
     const fetchProducts = async ()=> {
+        setLoading(true);
         const {data}= await commerce.products.list();
-        setProducts(data)
-    }
+        setProducts(data);
+        setLoading(false);
+        
+    };
 
     const fetchCart = async () =>{
-        setCart(await commerce.cart.retrieve())
-    }
+        setLoading(true)
+        setCart(await commerce.cart.retrieve());
+        setLoading(false);
+       
+    };
 
     const handleAddToCart = async(productId, quantity)=>{
         const item = await commerce.cart.add(productId, quantity);
@@ -31,8 +41,10 @@ function App() {
     }
 
     useEffect(()=>{
-        fetchProducts();
         fetchCart();
+            fetchProducts();
+            <Cart cart={cart}/>
+            
     }, []);
     console.log(cart);
     return (
@@ -60,15 +72,20 @@ function App() {
                 <Breadcrumb.Item>App</Breadcrumb.Item>
             </Breadcrumb>
             <div className="site-layout-background" style={{ padding: 24, minHeight: 380 }}>
-            <Products products={products} onAddToCart={handleAddToCart}/>
+                {/* {loading? <Skeleton active></Skeleton>:
+                (<><Products products={products} onAddToCart={handleAddToCart}/>   
+                
+                </>)} */}
+                <Cart cart={cart}/>
+                
+            
             </div>
+            
             </Content>
             <Footer style={{ textAlign: 'center' }}>Ecom ©2021 Created by Ow_tech</Footer>
         </Layout>
 
            
-            
-
             
             
     );

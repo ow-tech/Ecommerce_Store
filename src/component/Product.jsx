@@ -11,10 +11,6 @@ const Product = ({product, onAddToCart}) => {
    
     return (
         <div>
-        
-
-        
-
             <Card 
                 hoverable
                 style={{ width: 300}}
