@@ -1,15 +1,17 @@
 import React, {useEffect, useState} from 'react'
-
 import {Link} from 'react-router-dom';
 import {Typography,Drawer, Divider, Row,Col, Skeleton, Button, Empty, Space} from 'antd';
 import CartItem from './CartItem';
+import AddressForm from'./AddressForm';
+// import PaymentForm from './Inputtxt';
 
 
 const Cart = ({cart, handleEmptyCart,
     handleCartQtyUpadate,handleRemoveFromCart,loading
 }) => { 
-    const {visible, setVisible}= useState(false)
-    const sh
+    const [visible, setVisible]= useState(false)
+    const showDrawer = ()=>setVisible(true)
+    const onClose = ()=>setVisible(false)
    
     
     const EmptyCart =  ()=>(<>
@@ -34,9 +36,27 @@ const Cart = ({cart, handleEmptyCart,
                     <Col  span={14}><h4 level={4}>Subtotal: {cart.subtotal.formatted_with_symbol} </h4></Col>
                     <Col span={5}> <Button type="primary" danger onClick={handleEmptyCart}>
                         EmptyCart</Button></Col>
-                    <Col span={5}> <Link to="/checkout"><Button type="primary" primary>
-                        Checkout</Button></Link></Col>
+                    <Col span={5}> <Button onClick={showDrawer}type="primary" primary>
+                        Checkout</Button></Col>
                 </Row>
+                {/* Drawer */}
+                <Drawer
+                
+                    title="CHECKOUT"
+                    width={340}
+                    placement="top"
+                    closable={false}
+                    onClose={onClose}
+                    visible={visible}
+                    getContainer={false}
+                    style={{ position: 'absolute' }}
+                    >
+                        <AddressForm/>
+                   
+                    
+                      
+                    <p>Some contents...</p>
+                </Drawer>
                 </>
     );
     if(!cart.line_items){
