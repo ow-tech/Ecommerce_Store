@@ -4,12 +4,17 @@ import {Typography,Drawer, Divider, Row,Col, Skeleton, Button, Empty, Space} fro
 import CartItem from './CartItem';
 import AddressForm from'./AddressForm';
 // import PaymentForm from './Inputtxt';
+import {commerce} from'../lib/commerce';
 
 
 const Cart = ({cart, handleEmptyCart,
     handleCartQtyUpadate,handleRemoveFromCart,loading
 }) => { 
+    // const [checkout, setCheckout]= useState('');
     const [visible, setVisible]= useState(false)
+    const [checkoutToken,setCheckoutToken]= useState(null)
+
+   
     const showDrawer = ()=>setVisible(true)
     const onClose = ()=>setVisible(false)
    
@@ -40,6 +45,7 @@ const Cart = ({cart, handleEmptyCart,
                         Checkout</Button></Col>
                 </Row>
                 {/* Drawer */}
+               
                 <Drawer
                 
                     title="CHECKOUT"
@@ -51,14 +57,30 @@ const Cart = ({cart, handleEmptyCart,
                     getContainer={false}
                     style={{ position: 'absolute' }}
                     >
-                        <AddressForm/>
-                   
+                        <AddressForm checkoutToken={checkoutToken}cart={cart}/>
+                                        
                     
                       
                     <p>Some contents...</p>
                 </Drawer>
                 </>
     );
+    useEffect(() => {
+        const generateToken = async ()=>{
+            try {
+                const token = await commerce.checkout.generateToken(cart.id, {type: 'cart'});
+                console.log(token)
+                console.log("ama above")
+                setCheckoutToken(token)
+            }
+            catch(err){
+
+            }
+        }
+        generateToken();
+        
+        // handleCallBack(checkoutToken)
+    }, [cart]);
     if(!cart.line_items){
         
         return <Skeleton active/>

@@ -1,14 +1,37 @@
-import React from 'react'
+import {React,useState,useEffect} from 'react'
+import {commerce} from'../lib/commerce';
 import {useForm, FormProvider} from 'react-hook-form'
 import {Divider, Col, Row, Space}from 'antd'
-import { ElementsConsumer, CardElement,ElementsConsumer } from '@stripe/react-stripe-js';
+import { ElementsConsumer, CardElement } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import Inputtxt from './Inputtxt';
 
-function AddressForm() {
+
+function AddressForm({cart, checkoutToken}) {
+  
+
+    // const [shipingCountries, setShippingCountries] = useState([shipingCountriesData[shipingSubdivisionsData[0]]]);
+    // const [shipingSubdivisions, setShippingSubdivisions] = useState([]);
+    // const [shipingOptions, setShippingOptions] = useState([])
+
+
+   
+    
+
+
+   
+   
+
+   
+    const fetchshipingCountries = async(checkoutTokenId) =>{
+        const {countries} = await commerce.services.localListShippingCountries(checkoutTokenId)
+        console.log(countries)
+    }
    
     const { register, watch, handleSubmit, formState:{ errors},control } = useForm();
     const onSubmit = data =>console.log(data);
+  
+
     return (
         <>
             
@@ -38,13 +61,36 @@ function AddressForm() {
                                 </Col>
                                 </Space>
                             </Row>
+
+                            {/* <Row>
+                                <Col>
+                                    <Select defaultValue={provinceData[0]} style={{ width: 120 }} onChange={handleProvinceChange}>
+                                    {provinceData.map(province => (
+                                    <Option key={province}>{province}</Option>
+                                    ))}
+                                    </Select>
+                                </Col>
+                                    
+                                <Col>
+                                    <Select style={{ width: 120 }} value={secondCity} onChange={onSecondCityChange}>
+                                        {cities.map(city => (
+                                        <Option key={city}>{city}</Option>
+                                        ))}
+                                    </Select>
+                                </Col>
+                                <Col>
+                                    <Select style={{ width: 120 }} value={secondCity} onChange={onSecondCityChange}>
+                                    {cities.map(city => (
+                                    <Option key={city}>{city}</Option>
+                                    ))}
+                                    </Select>
+                                </Col>
+                            </Row> */}
                             <Divider orientation="center">
                                 Payment
                             </Divider>
                             <Row>
-                                <Space>
-
-                                </Space>
+                            
                             </Row>
 
                             <input type="submit"/>
