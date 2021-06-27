@@ -13,6 +13,7 @@ const Cart = ({cart, handleEmptyCart,
     // const [checkout, setCheckout]= useState('');
     const [visible, setVisible]= useState(false)
     const [checkoutToken,setCheckoutToken]= useState(null)
+    const [checkoutTokenf,setCheckoutTokenf]=useState(null)
 
    
     const showDrawer = ()=>setVisible(true)
@@ -49,19 +50,15 @@ const Cart = ({cart, handleEmptyCart,
                 <Drawer
                 
                     title="CHECKOUT"
-                    width={340}
-                    placement="top"
+                    width={500}
+                    placement="right"
                     closable={false}
                     onClose={onClose}
                     visible={visible}
                     getContainer={false}
                     style={{ position: 'absolute' }}
                     >
-                        <AddressForm checkoutToken={checkoutToken}cart={cart}/>
-                                        
-                    
-                      
-                    <p>Some contents...</p>
+                        <AddressForm checkoutToken={checkoutToken} checkoutTokenf={checkoutTokenf} cart={cart} onClose={onClose}/>
                 </Drawer>
                 </>
     );
@@ -69,9 +66,12 @@ const Cart = ({cart, handleEmptyCart,
         const generateToken = async ()=>{
             try {
                 const token = await commerce.checkout.generateToken(cart.id, {type: 'cart'});
-                console.log(token)
-                console.log("ama above")
-                setCheckoutToken(token)
+                // console.log(token)
+                // console.log("ama above")
+                setCheckoutToken(token.id)
+                setCheckoutTokenf(token.live)
+                // console.log(token)
+                // console.log(checkoutTokenf)
             }
             catch(err){
 
