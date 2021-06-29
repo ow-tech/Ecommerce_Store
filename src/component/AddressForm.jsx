@@ -2,12 +2,11 @@ import {React,useState,useEffect} from 'react'
 import {commerce} from'../lib/commerce';
 import {useForm, FormProvider} from 'react-hook-form'
 import {Divider, Col, Row, Space, Select, Typography, Button, Input, Drawer}from 'antd'
-import { ElementsConsumer, CardElement, Elements } from '@stripe/react-stripe-js';
-import { loadStripe } from '@stripe/stripe-js';
 import Inputtxt from './Inputtxt';
 
 
-function AddressForm({cart, checkoutToken, checkoutTokenf, onClose}) {
+
+function AddressForm({cart, checkoutToken, checkoutTokenf, setStateCount, obtainStateFromChild}) {
 
   
     const { Option } = Select;
@@ -18,14 +17,7 @@ function AddressForm({cart, checkoutToken, checkoutTokenf, onClose}) {
     const [shippingOptions, setShippingOptions] = useState([]);
     const [shippingOption, setShippingOption] = useState('');
     const [shippingData, setShippingData] = useState({});
-    const [childVisble, setChildVisible]= useState(false)
-    // const showChildrenDrawer = () => {
-    //    setChildVisible(true)
-    //   };
-    
-    //  const onChildrenDrawerClose = () => {
-    //     setChildVisible(false)
-    //   };
+ 
     
 // Fetching countries.subdivisions and shippingOptions to  populate select fields
    
@@ -56,7 +48,10 @@ function AddressForm({cart, checkoutToken, checkoutTokenf, onClose}) {
     const { register, watch, handleSubmit, formState:{ errors},control } = useForm();
     const onSubmit = data =>{
         setShippingData({...data, shippingCountry, shippingSubdivision, shippingOption})
-        console.log(shippingData)
+        setStateCount(+1)
+       obtainStateFromChild(shippingData)
+       console.log(shippingData)
+        
     };
 
    
@@ -93,9 +88,6 @@ function AddressForm({cart, checkoutToken, checkoutTokenf, onClose}) {
         setShippingOption(value)
     }
 
-    // Stripe methods
-
-    const stripePromise =loadStripe('....')
     return (
         <>
             
@@ -175,39 +167,9 @@ function AddressForm({cart, checkoutToken, checkoutTokenf, onClose}) {
                                 </Col>
                                     </Space>
                             </Row>
-                            {/* <Drawer
-                                title=" Payment Methods"
-                                width={10}
-                                placement="top"
-                                closable={false}
-                                onClose={onChildrenDrawerClose}
-                                visible={childVisble}
-                            >
-                               
-                            </Drawer> */}
-                            <Divider>
-                                Payment Options
-                            </Divider>
-                            <Elements stripe={stripePromise}>
-                                    <ElementsConsumer>
-                                        {({elements, stripe})=>(
-                                           <form>
-                                                   <div style={{ alignItems:'center'}}>
-                                                   <CardElement/> 
-                                                   <br/><br/>
-
-                                                   </div>
-                                                <div style={{ display:'flex',justifyContent:'space-around'}}>
-                                              
-                                                    {checkoutTokenf &&<Button type ="submit" variant="contained" disbled={!stripe} color="primary">Pay: {checkoutTokenf.subtotal.formatted_with_symbol}</Button>
-                                                    }
-                                                    </div>
-                                        </form>   
-                                        )}
-                                    </ElementsConsumer>
-                                </Elements>
+                         
                             <Divider/>
-                            <Input type="submit" value='Check Out' /> 
+                            <Input type="submit" value='Next'  /> 
                     </form>
               </FormProvider>
         </>

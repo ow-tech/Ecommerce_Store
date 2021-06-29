@@ -1,16 +1,25 @@
 import React, {useEffect, useState} from 'react'
 import {Link} from 'react-router-dom';
-import {Typography,Drawer, Divider, Row,Col, Skeleton, Button, Empty, Space} from 'antd';
+import {Typography,Drawer, Divider, Row,Col, Skeleton, Button, Empty, Space, Steps} from 'antd';
 import CartItem from './CartItem';
 import AddressForm from'./AddressForm';
 // import PaymentForm from './Inputtxt';
 import {commerce} from'../lib/commerce';
 
+// import { ElementsConsumer, CardElement, Elements } from '@stripe/react-stripe-js';
+// import { loadStripe } from '@stripe/stripe-js';
+import PaymentForm from './PaymentForm';
+
 
 const Cart = ({cart, handleEmptyCart,
     handleCartQtyUpadate,handleRemoveFromCart,loading
 }) => { 
+
+
+  
     // const [checkout, setCheckout]= useState('');
+    const [shippingData, setShippingData]=useState('');
+    const [stateCount, setStateCount] =useState(0);
     const [visible, setVisible]= useState(false)
     const [checkoutToken,setCheckoutToken]= useState(null)
     const [checkoutTokenf,setCheckoutTokenf]=useState(null)
@@ -18,7 +27,8 @@ const Cart = ({cart, handleEmptyCart,
    
     const showDrawer = ()=>setVisible(true)
     const onClose = ()=>setVisible(false)
-   
+    const obtainStateFromChild = shippingData =>setShippingData(shippingData)
+   console.log(shippingData)
     
     const EmptyCart =  ()=>(<>
         <Typography variant="subtitle">You have no items in your cart. Start adding now</Typography>
@@ -51,17 +61,22 @@ const Cart = ({cart, handleEmptyCart,
                 
                     title="CHECKOUT"
                     width={500}
-                    placement="right"
+                    placement="left"
                     closable={false}
                     onClose={onClose}
                     visible={visible}
                     getContainer={false}
                     style={{ position: 'absolute' }}
                     >
-                        <AddressForm checkoutToken={checkoutToken} checkoutTokenf={checkoutTokenf} cart={cart} onClose={onClose}/>
+                        {stateCount == 0?<AddressForm checkoutToken={checkoutToken} checkoutTokenf={checkoutTokenf} setStateCount={setStateCount}cart={cart} obtainStateFromChild={obtainStateFromChild} />:<PaymentForm checkoutTokenf={checkoutTokenf} shippingData={shippingData}/> }
+                        
+                        
                 </Drawer>
+                
                 </>
+                
     );
+
     useEffect(() => {
         const generateToken = async ()=>{
             try {
