@@ -4,9 +4,8 @@ import {useForm, FormProvider} from 'react-hook-form'
 import {Divider, Col, Row, Space, Select, Typography, Button, Input, Drawer}from 'antd'
 import Inputtxt from './Inputtxt';
 
-
-
 function AddressForm({cart, checkoutToken, checkoutTokenf, setStateCount, obtainStateFromChild}) {
+ 
 
   
     const { Option } = Select;
@@ -23,66 +22,88 @@ function AddressForm({cart, checkoutToken, checkoutTokenf, setStateCount, obtain
    
     const fetchshipingCountries = async(checkoutToken) =>{
         const {countries} = await commerce.services.localeListShippingCountries(checkoutToken);
-        // console.log(countries)
-        // console.log("am countries")
-            
+        if(countries){
             setShippingCountries(countries);
             setShippingCountry(Object.keys(countries)[0]);
-            // setObjOfCountries(countries)
-            // console.log(objOfCountries)
-            // setCountryCode(getKeyByValue(countries, shippingCountry))
-        
+            console.log('am countryb')
+            console.log(shippingCountry)
+        }  
     }
     const fetchSubdivisons= async (countryCode)=> {
         const { subdivisions} = await commerce.services.localeListSubdivisions(countryCode);
+       
             setShippingSubdivisions(subdivisions);
             setShippingSubdivision(Object.keys(subdivisions)[0])
+            console.log('am shippingDuvb')
+            console.log(shippingSubdivision)
+           
     }
     const fetchShippingOptions = async (checkoutTokenId, country, stateProvince = null) => {
         const options = await commerce.checkout.getShippingOptions(checkoutTokenId, { country, region: stateProvince });
-    
-        setShippingOptions(options);
-        setShippingOption(options[0].id);
+        if (options){
+            setShippingOptions(options);
+            setShippingOption(options[0].id);
+            console.log('am shippingOption b')
+            console.log(shippingOption)
+
+        }  
       };
 
-    const { register, watch, handleSubmit, formState:{ errors},control } = useForm();
+    const { register, watch, handleSubmit,control } = useForm();
     const onSubmit = data =>{
+       
         setShippingData({...data, shippingCountry, shippingSubdivision, shippingOption})
         setStateCount(+1)
-       obtainStateFromChild(shippingData)
+        obtainStateFromChild(shippingData)
        console.log(shippingData)
+    //    console.log(data)
         
     };
 
    
 // Handling dynamic rendering of select fields after making a choice
     useEffect(() =>{
+        let abortController = new AbortController();
         fetchshipingCountries(checkoutToken);
+        console.log( shippingCountry)
+        return () => {
+            abortController.abort();
+        }
         // setObjOfCountries(fetchshipingCountries(checkoutToken))
+       
 
     }, []);
 
     useEffect(() =>{
-       if(shippingCountry) {
-           
-           fetchSubdivisons(shippingCountry)}
-        //    console.log( shippingCountry)
-        //    console.log(countryCode)
+        let abortController = new AbortController();
       
-
+           if(shippingCountry){
+           fetchSubdivisons(shippingCountry)
+           console.log( shippingSubdivision)
+        //    console.log(countryCode)
+           }
+        return () => {
+            abortController.abort();
+        }
+       
     },[shippingCountry]);
+
     useEffect(() => {
-        if (shippingSubdivision) fetchShippingOptions(checkoutToken, shippingCountry, shippingSubdivision);
+       let abortController = new AbortController();
+       fetchShippingOptions(checkoutToken, shippingCountry, shippingSubdivision);
+        console.log( shippingOptions)
+        return () => {
+            abortController.abort();
+        }
+       
       }, [shippingSubdivision]);
 
     //   Handling value change change on select fields
     const handleShippingCountry = value =>{
-        setShippingCountry(value)
-        
+        setShippingCountry(value) 
     }
     const handleShippingDivision = value =>{
-        setShippingSubdivision(value)
-        
+        setShippingSubdivision(value) 
     }
     const handleShippingOption = value =>{
         setShippingOption(value)
@@ -97,13 +118,13 @@ function AddressForm({cart, checkoutToken, checkoutTokenf, setStateCount, obtain
                             <Row >
                             <Space >
                                 <Col className="gutter-row">
-                                    <Inputtxt required name='firstName' label='First Name' control={control}/>
+                                    <Inputtxt required name='firstName' label='First Name'ref={register} control={control}/>
                                 </Col>
                                 <Col className="gutter-row" >
-                                    <Inputtxt required name='LastName' label='Last Name' control={control}/>
+                                    <Inputtxt required name='lastName' label='Last Name' ref={register}control={control}/>
                                 </Col>
                                 <Col className="gutter-row" >
-                                    <Inputtxt required name='email' label='Email' control={control}/>
+                                    <Inputtxt required name='email' label='Email'ref={register} control={control}/>
                                 </Col>
                                 </Space>
                                 </Row>
@@ -112,14 +133,14 @@ function AddressForm({cart, checkoutToken, checkoutTokenf, setStateCount, obtain
                                 <Row>
                                     <Space>
                                 <Col className="gutter-row" >
-                                    <Inputtxt required name='City' label='City' control={control}/>
+                                    <Inputtxt required name='city' label='City' ref={register} control={control}/>
                                 </Col>
                                 <Col className="gutter-row" >
-                                    <Inputtxt required name='address' label='Address' control={control}/>
+                                    <Inputtxt required name='address' label='Address'ref={register} control={control}/>
                                 </Col>
             
                                 <Col className="gutter-row" >
-                                <Inputtxt required name='zip' label='Zip' control={control}/>
+                                <Inputtxt required name='zip' label='Zip'ref={register} control={control}/>
                                 </Col>
                                 </Space>
                             </Row>

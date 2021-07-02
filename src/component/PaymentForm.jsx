@@ -1,16 +1,17 @@
 import React from 'react';
-import {Button, Divider} from 'antd';
+import {Button, Divider, Input} from 'antd';
 import {commerce} from'../lib/commerce';
 import { ElementsConsumer, CardElement, Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 
-function PaymentForm({setStateCount, shippingData, checkoutTokenf}) {
+function PaymentForm({handleState, shippingData, checkoutTokenf, onCaptureCheckout, checkoutToken}) {
     console.log(shippingData)
 
-    const stripePromise =loadStripe(process.env.STRIPE_KEY)
+    const stripePromise =loadStripe('...')
 
     const handleSubmit = async (event,elements, stripe)=>{
         event.preventDefault();
+        console.log('I have been checkout and submited')
         if(!stripe || !elements) return;
 
 
@@ -34,6 +35,7 @@ function PaymentForm({setStateCount, shippingData, checkoutTokenf}) {
                     }
                 }
             }
+            onCaptureCheckout(checkoutToken, orderData)
         }
     }
 
@@ -52,11 +54,15 @@ function PaymentForm({setStateCount, shippingData, checkoutTokenf}) {
                                     <br/><br/>
 
                                     </div>
-                                <div style={{ display:'flex',justifyContent:'space-around'}}>
+                                <div style={{ display:'flex',justifyContent:'space-between'}}>
+                                <Input type="submit" value="Back" onClick={handleState}/>
                                 
-                                    {checkoutTokenf &&<Button type ="submit" variant="contained" disbled={!stripe} color="primary">Pay: {checkoutTokenf.subtotal.formatted_with_symbol}</Button>
-                                    }
+                                   <Button type ="submit" variant="contained" disbled={!stripe} color="primary">Pay: {checkoutTokenf.subtotal.formatted_with_symbol}</Button>
+                                   
+
                                     </div>
+                                   
+                                    
                         </form>   
                         )}
                     </ElementsConsumer>

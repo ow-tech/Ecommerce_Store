@@ -28,6 +28,8 @@ function App() {
     const [loading, setLoading] = useState(true)
     const [products, setProducts ] = useState([])
     const [cart, setCart] = useState({});
+    const [order, setOrder] = useState({});
+    const [errorMessage, setErrorMessage] = useState('');
     const fetchProducts = async ()=> {
         setLoading(true);
         const {data}= await commerce.products.list();
@@ -67,8 +69,25 @@ function App() {
         setCart(cart);
         setLoading(false);
     }
+    const refreshCart = async () => {
+        const newCart = await commerce.cart.refresh();
+    
+        setCart(newCart);
+      };
+    const handleCaptureCheckout = async (checkoutTokenId, newOrder) => {
+        try {
+          const incomingOrder = await commerce.checkout.capture(checkoutTokenId, newOrder);
+    
+          setOrder(incomingOrder);
+    
+          refreshCart();
+        } catch (error) {
+          setErrorMessage(error.data.error.message);
+        }
+      };
 
     useEffect(()=>{
+        
         fetchCart();
             fetchProducts();    
             
@@ -123,6 +142,8 @@ function App() {
                                  handleEmptyCart={handleEmptyCart}
                                  handleCartQtyUpadate={handleCartQtyUpadate}
                                  handleRemoveFromCart ={handleRemoveFromCart}
+                                 order={order}
+                                 OnCaptureCheckout={handleCaptureCheckout}
                                  
                              /> 
      

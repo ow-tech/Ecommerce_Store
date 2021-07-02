@@ -12,7 +12,7 @@ import PaymentForm from './PaymentForm';
 
 
 const Cart = ({cart, handleEmptyCart,
-    handleCartQtyUpadate,handleRemoveFromCart,loading
+    handleCartQtyUpadate,handleRemoveFromCart,loading,order,onCaptureCheckout
 }) => { 
 
 
@@ -29,9 +29,11 @@ const Cart = ({cart, handleEmptyCart,
     const onClose = ()=>setVisible(false)
     const obtainStateFromChild = shippingData =>setShippingData(shippingData)
    console.log(shippingData)
+
+   const handleState = ()=>{setStateCount(stateCount-1)}
     
     const EmptyCart =  ()=>(<>
-        <Typography variant="subtitle">You have no items in your cart. Start adding now</Typography>
+        <Typography variant="subtitle">You have no items onCaptureCheckoutin your cart. Start adding now</Typography>
         <Link to="/">Go Back and ADD Items</Link>
         <Empty/>
         </>
@@ -68,7 +70,7 @@ const Cart = ({cart, handleEmptyCart,
                     getContainer={false}
                     style={{ position: 'absolute' }}
                     >
-                        {stateCount == 0?<AddressForm checkoutToken={checkoutToken} checkoutTokenf={checkoutTokenf} setStateCount={setStateCount}cart={cart} obtainStateFromChild={obtainStateFromChild} />:<PaymentForm checkoutTokenf={checkoutTokenf} shippingData={shippingData}/> }
+                        {stateCount == 0?<AddressForm checkoutToken={checkoutToken} checkoutTokenf={checkoutTokenf} setStateCount={setStateCount}cart={cart} obtainStateFromChild={obtainStateFromChild} />:<PaymentForm handleState={handleState} checkoutTokenf={checkoutTokenf} shippingData={shippingData} checkoutToken={checkoutToken}onCaptureCheckout={onCaptureCheckout}/> }
                         
                         
                 </Drawer>
@@ -78,6 +80,7 @@ const Cart = ({cart, handleEmptyCart,
     );
 
     useEffect(() => {
+        let abortController = new AbortController();
         const generateToken = async ()=>{
             try {
                 const token = await commerce.checkout.generateToken(cart.id, {type: 'cart'});
@@ -93,6 +96,7 @@ const Cart = ({cart, handleEmptyCart,
             }
         }
         generateToken();
+        abortController.abort();
         
         // handleCallBack(checkoutToken)
     }, [cart]);
